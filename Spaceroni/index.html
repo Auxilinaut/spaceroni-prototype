@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript HTML App</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+    <script src="InfiniShip.js"></script>
+    <script src="phaser.js"></script>
+    <script src="app.js"></script>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        // monochrome ships? (Optional, default: false)
+        mono = false;
+
+        // Instance of the InfiniShip object
+        ship = new InfiniShip(mono);
+
+        // Number of ships you want horizontally and vertically (Optional, default: 8)
+        var shipX = 16;
+        var shipY = 8;
+
+        // Generating sprite sheet
+        ship.makeMultiple(shipX, shipY);
+    </script>
+</body>
+</html>
