@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="dawg.jpg" />
+    <Content Include="debug-grid-1920x1920.png" />
     <Content Include="index.html" />
     <Content Include="InfiniShip.js" />
     <Content Include="level1.png" />

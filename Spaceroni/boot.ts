@@ -22,7 +22,10 @@
             else {
                 //  Same goes for mobile settings.
             }
-            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            this.game.world.setBounds(0, 0, 1920, 1920);
+
+            this.game.physics.startSystem(Phaser.Physics.P2JS);
             this.game.state.start('Preloader', true, false);
 
         }

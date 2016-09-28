@@ -15,6 +15,7 @@
             this.load.image('logo', 'logo.png');
             this.load.audio('music', 'title.mp3', true);
             this.load.spritesheet('simon', 'simon.png', 58, 96, 5);
+            this.load.image('debug', 'debug-grid-1920x1920.png');
             this.load.image('level1', 'level1.png');
 
             var sheet = document.getElementById('sheet').getAttribute('src');
@@ -25,6 +26,8 @@
 
             var tween = this.add.tween(this.preloadBar).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(this.startMainMenu, this);
+
+            this.game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
 
         }
 

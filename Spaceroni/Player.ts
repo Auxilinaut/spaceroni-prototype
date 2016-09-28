@@ -2,6 +2,8 @@ module Spaceroni {
 
     export class Player extends Phaser.Sprite {
 
+        cursors: Phaser.CursorKeys;
+
         constructor(game: Phaser.Game, x: number, y: number) {
 
             super(game, x, y, 'simon', 0);
@@ -12,15 +14,17 @@ module Spaceroni {
 
             game.add.existing(this);
 
-            this.game.physics.arcade.enableBody(this);
+            this.cursors = this.game.input.keyboard.createCursorKeys();
 
+            this.game.physics.p2.enable(this);
+            this.body.fixedRotation = true;
         }
 
         update() {
+            
+            this.body.setZeroVelocity();
 
-            this.body.velocity.x = 0;
-
-            if (this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
+            if (this.cursors.left.isDown) {
 
                 this.body.velocity.x = -150;
                 this.animations.play('walk');
@@ -29,7 +33,7 @@ module Spaceroni {
                     this.scale.x = -1;
                 }
             }
-            else if (this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+            else if (this.cursors.right.isDown) {
 
                 this.body.velocity.x = 150;
                 this.animations.play('walk');
@@ -42,8 +46,14 @@ module Spaceroni {
                 this.animations.frame = 0;
             }
 
+            if (this.cursors.up.isDown) {
+                this.body.moveUp(300)
+            }
+            else if (this.cursors.down.isDown) {
+                this.body.moveDown(300);
+            }
         }
-
+            
     }
 
 }

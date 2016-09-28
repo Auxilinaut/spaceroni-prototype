@@ -7,7 +7,7 @@ module Spaceroni {
 
         create() {
 
-            this.background = this.add.sprite(0, 0, 'titlepage');
+            /*this.background = this.add.sprite(0, 0, 'titlepage');
             this.background.alpha = 0;
 
             this.logo = this.add.sprite(this.world.centerX, -300, 'logo');
@@ -16,7 +16,9 @@ module Spaceroni {
             this.add.tween(this.background).to({ alpha: 1}, 2000, Phaser.Easing.Bounce.InOut, true);
             this.add.tween(this.logo).to({ y: 220 }, 2000, Phaser.Easing.Elastic.Out, true, 2000);
 
-            this.input.onDown.addOnce(this.fadeOut, this);
+            this.input.onDown.addOnce(this.fadeOut, this);*/
+
+            this.game.state.start('Level1', true, false);
 
         }
 
