@@ -1,6 +1,6 @@
 ### Spaceroni Game ###
 
-This game uses [phaser](http://phaser.io/) and [infiniship](https://github.com/yuigoto/infiniship).
+This game uses [phaser](http://phaser.io/) and [infiniship](https://github.com/yuigoto/infiniship). It is VERY early in development.
 
 Run Spaceroni.sln in VS2015 or higher to start the project.
 
