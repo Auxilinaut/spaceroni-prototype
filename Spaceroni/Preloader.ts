@@ -6,20 +6,19 @@
 
         preload() {
 
-            //  Set-up our preloader sprite
+            //preloader sprite
             this.preloadBar = this.add.sprite(200, 250, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
 
-            //  Load our actual games assets
-            this.load.image('titlepage', 'titlepage.jpg');
-            this.load.image('logo', 'logo.png');
-            this.load.audio('music', 'title.mp3', true);
-            this.load.spritesheet('simon', 'simon.png', 58, 96, 5);
+            //game assets
+            this.load.image('player', 'ship.png');
             this.load.image('debug', 'debug-grid-1920x1920.png');
-            this.load.image('level1', 'level1.png');
+            this.load.image('missile', 'missile.png');
+            this.load.image('laser', 'laser.png');
 
+            //enemies
             var sheet = document.getElementById('sheet').getAttribute('src');
-            this.load.spritesheet('sheet',sheet,12,12,128,4,4)
+            this.load.spritesheet('sheet',sheet,12,12,128,2,4)
         }
 
         create() {

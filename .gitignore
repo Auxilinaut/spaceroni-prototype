@@ -29,6 +29,7 @@ testem.log
 /typings
 /phaser
 /infiniship
+/ignore
 
 # e2e
 /e2e/*.js

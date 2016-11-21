@@ -16,6 +16,8 @@
             //  Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
             this.stage.disableVisibilityChange = true;
 
+            this.game.scale.scaleMode = PIXI.scaleModes.NEAREST;
+
             if (this.game.device.desktop) {
                 //  If you have any desktop specific settings, they can go in here
             }
@@ -25,7 +27,7 @@
 
             this.game.world.setBounds(0, 0, 1920, 1920);
 
-            this.game.physics.startSystem(Phaser.Physics.P2JS);
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
             this.game.state.start('Preloader', true, false);
 
         }

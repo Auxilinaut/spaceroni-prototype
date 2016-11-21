@@ -18,7 +18,7 @@ module Spaceroni {
 
             this.input.onDown.addOnce(this.fadeOut, this);*/
 
-            this.game.state.start('Level1', true, false);
+            this.startGame();
 
         }
 

@@ -3,55 +3,57 @@ module Spaceroni {
     export class Player extends Phaser.Sprite {
 
         cursors: Phaser.CursorKeys;
+        weapon: Missile;
+        fireButton: any;
 
         constructor(game: Phaser.Game, x: number, y: number) {
 
-            super(game, x, y, 'simon', 0);
+            super(game, x, y, 'player');
 
-            this.anchor.setTo(0.5, 0);
-
-            this.animations.add('walk', [0, 1, 2, 3, 4], 10, true);
+            this.anchor.setTo(0.5, 0.5);
 
             game.add.existing(this);
+            this.weapon = game.add.weapon(30, 'laser');
 
-            this.cursors = this.game.input.keyboard.createCursorKeys();
+            this.cursors = game.input.keyboard.createCursorKeys();
+            this.fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
-            this.game.physics.p2.enable(this);
-            this.body.fixedRotation = true;
+            game.physics.arcade.enable(this);
+
+            this.body = new Phaser.Physics.Arcade.Body(this);
+            this.body.drag.set(100);
+            this.body.maxVelocity.set(200);
+
+            //  Tell the weapon to track the player with no offsets from the position
+            //  The 'true' argument tells the weapon to track sprite rotation
+            this.weapon.trackSprite(this, 0, 0, true);
+            this.weapon.bulletAngleOffset = 90;
+            this.weapon
         }
 
         update() {
-            
-            this.body.setZeroVelocity();
-
-            if (this.cursors.left.isDown) {
-
-                this.body.velocity.x = -150;
-                this.animations.play('walk');
-
-                if (this.scale.x == 1) {
-                    this.scale.x = -1;
-                }
-            }
-            else if (this.cursors.right.isDown) {
-
-                this.body.velocity.x = 150;
-                this.animations.play('walk');
-
-                if (this.scale.x == -1) {
-                    this.scale.x = 1;
-                }
-            }
-            else {
-                this.animations.frame = 0;
-            }
 
             if (this.cursors.up.isDown) {
-                this.body.moveUp(300)
+                this.game.physics.arcade.accelerationFromRotation(this.rotation, 300, this.body.acceleration);
             }
-            else if (this.cursors.down.isDown) {
-                this.body.moveDown(300);
+            else {
+                this.body.acceleration.set(0);
             }
+
+            if (this.cursors.left.isDown) {
+                this.body.angularVelocity = -300;
+            }
+            else if (this.cursors.right.isDown) {
+                this.body.angularVelocity = 300;
+            }
+            else {
+                this.body.angularVelocity = 0;
+            }
+
+            if (this.fireButton.isDown) {
+                this.weapon.fire();
+            }
+
         }
             
     }

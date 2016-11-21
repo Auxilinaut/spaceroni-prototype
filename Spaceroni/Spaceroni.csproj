@@ -27,20 +27,19 @@
     <Content Include="debug-grid-1920x1920.png" />
     <Content Include="index.html" />
     <Content Include="InfiniShip.js" />
-    <Content Include="level1.png" />
+    <Content Include="laser.png" />
     <Content Include="loader.png" />
-    <Content Include="logo.png" />
+    <Content Include="missile.png" />
     <Content Include="phaser.js" />
     <Content Include="phaser.min.js" />
-    <Content Include="simon.png" />
-    <Content Include="title.mp3" />
-    <Content Include="titlepage.jpg" />
+    <Content Include="ship.png" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="boot.ts" />
     <TypeScriptCompile Include="box2d.d.ts" />
+    <TypeScriptCompile Include="Missile.ts" />
     <TypeScriptCompile Include="Enemies.ts" />
     <TypeScriptCompile Include="Game.ts" />
     <TypeScriptCompile Include="Level1.ts" />

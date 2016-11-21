@@ -13,7 +13,7 @@ module Spaceroni {
 
             //this.music = this.add.audio('music', 1, false);
             //this.music.play();
-            this.player = new Player(this.game, 130, 284);
+            this.player = new Player(this.game, 960, 960);
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
@@ -24,9 +24,10 @@ module Spaceroni {
         render() {
 
             //this.game.debug.cameraInfo(this.game.camera, 500, 32);
+            this.player.weapon.debug();
 
         }
 
-        }
+    }
 
 }

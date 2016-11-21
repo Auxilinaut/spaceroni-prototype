@@ -1,6 +1,6 @@
 ﻿module Spaceroni {
 
-    export class Enemies extends Phaser.Group {
+    export class Enemies extends Phaser.Group implements Phaser.Group {
 
         constructor(game: Phaser.Game, num: number) {
 
@@ -13,12 +13,15 @@
             for (var i = 0; i < num; i++) {
                 //  This creates a new Phaser.Sprite instance within the group
                 //  Random location, random sprites
-                this.create(360 + Math.random() * 200, 120 + Math.random() * 200, 'sheet', i);
+                this.create(Math.random() * 960, Math.random() * 960, 'sheet', i);
             }
+
+            this.scale.set(4, 4);
 
         }
 
         update() {
+
         }
 
     }
