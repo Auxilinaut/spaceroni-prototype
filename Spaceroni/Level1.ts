@@ -24,8 +24,29 @@ module Spaceroni {
         render() {
 
             //this.game.debug.cameraInfo(this.game.camera, 500, 32);
-            this.player.weapon.debug();
+            //this.player.weapon.debug();
 
+        }
+
+        update() {
+            this.game.physics.arcade.overlap(this.player.weapon.bullets, this.enemies, this.hitEnemy, null, this);
+        }
+
+        hitEnemy(bul, enm) {
+
+            /*
+            var explosion = explosions.getFirstExists(false);
+            explosion.reset(Bullet.body.x + Bullet.body.halfWidth, Bullet.body.y + Bullet.body.halfHeight);
+            explosion.body.velocity.y = enemy.body.velocity.y;
+            explosion.alpha = 0.7;
+            explosion.play('explosion', 30, false, true);
+            */
+
+            bul.kill();
+
+            enm.kill();
+
+            console.log(1);
         }
 
     }
