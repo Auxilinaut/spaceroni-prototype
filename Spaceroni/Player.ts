@@ -3,7 +3,7 @@ module Spaceroni {
     export class Player extends Phaser.Sprite {
 
         cursors: Phaser.CursorKeys;
-        weapon: Phaser.Weapon; //must connect Spaceroni.Missile
+        weapon: Phaser.Weapon; //add Spaceroni.Missile
         fireButton: any;
 
         constructor(game: Phaser.Game, x: number, y: number) {
@@ -22,16 +22,13 @@ module Spaceroni {
             this.body = new Phaser.Physics.Arcade.Body(this);
             this.body.drag.set(100);
             this.body.maxVelocity.set(300);
-
-            //this.weapon = game.add.missile(30, 'missile');
+            
             this.weapon = game.add.weapon(30, 'missile');
-
-            //redundant, from Missile; refactor next
+            
             this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
             this.weapon.bulletLifespan = 3000;
             this.weapon.bulletSpeed = 500;
             this.weapon.fireRate = 300;
-            //this.weapon.bulletAngleOffset = 90;
             this.weapon.trackSprite(this, 75, 0, true);
         }
 
