@@ -5,6 +5,13 @@
         preload() {
 
             this.load.image('preloadBar', 'loader.png');
+            
+            this.game.scale.pageAlignHorizontally = true;
+            this.game.scale.pageAlignVertically = true;
+
+            this.game.scale.scaleMode = Phaser.ScaleManager.USER_SCALE;
+
+            this.game.scale.setResizeCallback(this.gameResized, this);
 
         }
 
@@ -14,9 +21,7 @@
             this.input.maxPointers = 1;
 
             //  Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
-            this.stage.disableVisibilityChange = true;
-
-            this.game.scale.scaleMode = PIXI.scaleModes.NEAREST;
+            //this.stage.disableVisibilityChange = true;
 
             if (this.game.device.desktop) {
                 //  If you have any desktop specific settings, they can go in here
@@ -25,11 +30,18 @@
                 //  Same goes for mobile settings.
             }
 
-            this.game.world.setBounds(0, 0, 1920, 1920);
+            this.game.world.setBounds(0, 0, 5000, 5000);
+            Phaser.Canvas.setSmoothingEnabled(this.game.context, false);
 
             this.game.physics.startSystem(Phaser.Physics.ARCADE);
             this.game.state.start('Preloader', true, false);
 
+        }
+
+        gameResized(manager: Phaser.ScaleManager, bounds: Phaser.Rectangle) {
+            var scale = Math.min(window.innerWidth / this.game.width, (window.innerHeight-20) / this.game.height);
+
+            manager.setUserScale(scale, scale, 0, 0);
         }
 
     }

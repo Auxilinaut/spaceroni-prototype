@@ -22,6 +22,9 @@ module Spaceroni {
             this.body = new Phaser.Physics.Arcade.Body(this);
             this.body.drag.set(100);
             this.body.maxVelocity.set(300);
+            this.body.collideWorldBounds = true;
+
+            this.scale.set(.8, .8);
             
             this.weapon = game.add.weapon(30, 'missile');
             

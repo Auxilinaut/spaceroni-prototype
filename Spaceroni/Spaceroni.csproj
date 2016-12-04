@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="arrow.png" />
     <Content Include="dawg.jpg" />
     <Content Include="debug-grid-1920x1920.png" />
     <Content Include="index.html" />

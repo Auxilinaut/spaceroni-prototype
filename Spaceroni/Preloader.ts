@@ -15,10 +15,11 @@
             this.load.image('debug', 'debug-grid-1920x1920.png');
             this.load.image('missile', 'missile.png');
             this.load.image('laser', 'laser.png');
+            this.load.image('arrow', 'arrow.png');
 
             //enemies
             var sheet = document.getElementById('sheet').getAttribute('src');
-            this.load.spritesheet('sheet',sheet,12,12,128,2,4)
+            this.load.spritesheet('sheet', sheet, 12, 12, 128, 2, 4);
         }
 
         create() {

@@ -150,6 +150,17 @@ function InfiniShip(monochrome)
      * Context object. 
      */
     this.context = this.main.getContext('2d');
+
+    /**
+     * Offscreen element (Canvas). 
+     */
+    this.offscreen = document.createElement('canvas');
+
+    /**
+     * OffScreen Context object. 
+     */
+    this.offscreencontext = this.offscreen.getContext('2d');
+
 }
 
 
@@ -365,7 +376,7 @@ InfiniShip.prototype.generateSingle = function()
     var cabin = this.cabinCell;
     
     // Generating image resource
-    var imgs = this.context.createImageData(w, h);
+    var imgs = this.offscreencontext.createImageData(w, h);
     
     // Initializing ship cell array
     var ship = new Array();
@@ -498,7 +509,7 @@ InfiniShip.prototype.makeShip = function()
     ship = this.generateSingle();
     
     // Inserting pixels into the image
-    this.context.putImageData(ship, 2, 2);
+    this.offscreencontext.putImageData(ship, 2, 2);
     
     // Defining wrapper source
     wrap.src = this.main.toDataURL();
@@ -530,30 +541,52 @@ InfiniShip.prototype.makeMultiple = function(numX, numY)
     // Calculating image dimensions
     this.main.width = (this.SHIP_W + 4) * numX;
     this.main.height = (this.SHIP_H + 4) * numY;
+
+    this.offscreen.width = this.main.width;
+    this.offscreen.height = this.main.height;
     
     // Creating a new image object to serve as wrapper
     var wrap = new Image();
+    var wrap2 = new Image();
     
     // Generating ships and inserting them inside the image
     for (var y = 0; y < (this.main.height - 12); y += 16) {
         for (var x = 0; x < (this.main.width - 12); x += 16) {
             // Creating ship
             ship = this.generateSingle();
-            
+
             // Inserting into image
-            this.context.putImageData(ship, x + 2, y + 2);
+            this.offscreencontext.putImageData(ship, x + 2, y + 2);
             
             // Redefining seed so different ships are created
             this.mainseed = this.generateSeed();
             this.clrsseed = this.generateSeed();
         }
     }
-    
+
+    this.context.translate(this.main.width/2, this.main.height/2);
+
+    // Rotate 1 degree
+    this.context.rotate(Math.PI / 2);
+
+    // Move registration point back to the top left corner of canvas
+    this.context.translate(-this.main.width/2, -this.main.height/2);
+    this.context.drawImage(this.offscreencontext.canvas, 0, 0);
+    /*
+    this.context.rotate(-Math.PI / 2);
+    this.context.translate(this.main.width/2, this.main.height/2);*/
+
     // Defining wrapper source
     wrap.src = this.main.toDataURL();
+    wrap2.src = this.offscreen.toDataURL();
     
     // Embedding into the document
-    wrap.style.visibility = "hidden";
+    wrap.style.display = "none";
     wrap.setAttribute("id", "sheet");
     document.body.appendChild(wrap);
+
+    wrap2.style.display = "none";
+    wrap2.setAttribute("id", "sheet2");
+    document.body.appendChild(wrap2);
+
 };
