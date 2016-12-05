@@ -12,19 +12,20 @@
 </head>
 <body>
     <div id="content"></div>
+    <div style="padding:1em;"><p><a href="https://www.github.com/Auxilinaut/Spaceroni">Game Source</a></p></div>
     <script>
         // monochrome ships? (Optional, default: false)
         var mono = false;
 
         // Instance of the InfiniShip object
-        ship = new InfiniShip(mono);
+        ships = new InfiniShip(mono);
 
         // Number of ships you want horizontally and vertically (Optional, default: 8)
         var shipX = 16;
         var shipY = 16;
 
         // Generating sprite sheet
-        ship.makeMultiple(shipX, shipY);
+        ships.makeMultiple(shipX, shipY);
     </script>
     <script src="background.js"></script>
 </body>

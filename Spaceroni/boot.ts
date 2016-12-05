@@ -39,7 +39,7 @@
         }
 
         gameResized(manager: Phaser.ScaleManager, bounds: Phaser.Rectangle) {
-            var scale = Math.min(window.innerWidth / this.game.width, (window.innerHeight-20) / this.game.height);
+            var scale = Math.min(window.innerWidth / this.game.width, (window.innerHeight-100) / this.game.height);
 
             manager.setUserScale(scale, scale, 0, 0);
         }

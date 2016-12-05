@@ -4,6 +4,7 @@ module Spaceroni {
 
         background: Phaser.Sprite;
         logo: Phaser.Sprite;
+        highScore;
 
         create() {
 
@@ -17,9 +18,15 @@ module Spaceroni {
             this.add.tween(this.logo).to({ y: 220 }, 2000, Phaser.Easing.Elastic.Out, true, 2000);
 
             this.input.onDown.addOnce(this.fadeOut, this);*/
-
+            this.highScore = localStorage.getItem('highscore');
             this.startGame();
 
+        }
+
+        render() {
+            if (this.highScore != null) {
+                this.game.debug.text("High Score: " + this.highScore, 1000, 32);
+            }
         }
 
         fadeOut() {

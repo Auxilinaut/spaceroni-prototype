@@ -7,6 +7,7 @@ module Spaceroni {
         player: Spaceroni.Player;
         enemies: Spaceroni.Enemies;
         enemyAmt: number = 10;
+        enemyTrackAmt: number;
         
         angle: any;
         targetAngle: any;
@@ -17,6 +18,9 @@ module Spaceroni {
         explosions: Phaser.Group;
 
         nextEvent: number = 0;
+
+        score: number = 0;
+        highScore: number = 0;
 
         create() {
 
@@ -53,10 +57,14 @@ module Spaceroni {
         }
 
         update() {
-
-            // collision detection between bullets/enemies
-            this.game.physics.arcade.overlap(this.player.weapon.bullets, this.enemies, this.hitEnemy, null, this);
             
+            // collision detection between bullets/enemies, as well as enemy bullets/player
+            this.game.physics.arcade.overlap(this.player.weapon.bullets, this.enemies, this.hitEnemy, null, this);
+            this.enemies.forEachAlive(function (enm) {
+                this.game.physics.arcade.overlap(this.enemies.weapons[this.enemies.getChildIndex(enm)].bullets, this.player, this.hitPlayer, null, this);
+            }, this);
+
+
             this.enemies.forEachAlive(function (enemy: Phaser.Sprite) {
 
                 // Calculate the angle from the enemy to the player.x and player.y
@@ -85,6 +93,8 @@ module Spaceroni {
                     // Just set angle to target angle if they are close
                     if (Math.abs(delta) < this.game.math.degToRad(3) && enemy.inCamera) {
                         enemy.rotation = this.targetAngle;
+                    } else {
+
                     }
                 }
 
@@ -111,25 +121,64 @@ module Spaceroni {
         }
 
         render() {
-            this.game.debug.text("now: " + this.game.time.now + " next: " + this.nextEvent, 32, 32);
-            /*this.game.debug.cameraInfo(this.game.camera, 32, 10);
-            
-            this.enemies.forEachAlive(function (enemy: Phaser.Sprite) {
-                this.game.debug.spriteInfo(enemy, 32, (this.enemies.getChildIndex(enemy)+1)*85);
-            }, this);
-
-            this.game.debug.spriteInfo(this.indicator, 32, 510);
-            this.game.debug.spriteInfo(this.player, 32, 600);*/
-
+            this.game.debug.text("Lives: " + this.player.lives, 32, 32);
+            this.game.debug.text("Score: " + this.score, 120, 32);
+            if (this.highScore != null) {
+                this.game.debug.text("High Score: " + this.highScore, 1000, 32);
+            }
         }
 
+        // collision bullet to player
+        hitPlayer(bul, plr) {
+            var explosion = this.explosions.getFirstExists(false);
+            explosion.reset(bul.body.x + bul.body.halfWidth, bul.body.y + bul.body.halfHeight);
+            explosion.body.velocity.y = plr.body.velocity.y;
+            explosion.alpha = 0.7;
+            explosion.play('explosion', 30, false, true);
+
+
+            
+
+            bul.kill();
+            
+            if (this.player.inCamera) {
+                if (this.player.lives > 1) {
+                    this.player.lives -= 1;
+                    this.player.kill();
+                    this.player.reset(2500, 2500);
+                } else {
+                    this.player.lives -= 1;
+                    this.player.kill();
+                    console.log("gg");
+                }
+
+                if (!this.player.alive) this.gameOver();
+
+                console.log(this.player.lives + " more lives");
+            }
+        }
+
+        // player dead :[
+        gameOver() {
+            this.highScore = Number(localStorage.getItem('highscore'));
+            if (this.highScore == null) {
+                if (this.score > this.highScore) {
+                    localStorage.setItem('highscore', this.score.toString());
+                }
+            } else {
+                localStorage.setItem('highscore', this.highScore.toString());
+            }
+            this.game.state.start('Boot', true);
+        }
+
+        // collision bullet to enemy
         hitEnemy(bul, enm) {
             var explosion = this.explosions.getFirstExists(false);
             explosion.reset(bul.body.x + bul.body.halfWidth, bul.body.y + bul.body.halfHeight);
             explosion.body.velocity.y = enm.body.velocity.y;
             explosion.alpha = 0.7;
             explosion.play('explosion', 30, false, true);
-            
+
 
             var idx = this.enemies.getChildIndex(enm);
 
@@ -139,9 +188,12 @@ module Spaceroni {
 
             enm.kill();
 
+            this.score += 1;
+
             console.log("boom");
         }
 
+        // random enemy fire interval setter
         updateNextEvent() {
             this.nextEvent = this.game.time.now + (this.game.rnd.between(0,1) * 100);
         }

@@ -5,6 +5,7 @@ module Spaceroni {
         cursors: Phaser.CursorKeys;
         weapon: Phaser.Weapon; //add Spaceroni.Missile
         fireButton: any;
+        lives: number = 3;
 
         constructor(game: Phaser.Game, x: number, y: number) {
 
@@ -17,9 +18,9 @@ module Spaceroni {
             this.cursors = game.input.keyboard.createCursorKeys();
             this.fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
 
-            game.physics.arcade.enable(this);
-
             this.body = new Phaser.Physics.Arcade.Body(this);
+            this.body.enable = true;
+            this.body.type = Phaser.Physics.ARCADE;
             this.body.drag.set(100);
             this.body.maxVelocity.set(300);
             this.body.collideWorldBounds = true;
