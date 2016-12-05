@@ -17,9 +17,16 @@
             this.load.image('laser', 'laser.png');
             this.load.image('arrow', 'arrow.png');
 
-            //enemies
+            //enemy spritesheet from Infiniship
             var sheet = document.getElementById('sheet').getAttribute('src');
             this.load.spritesheet('sheet', sheet, 12, 12, 128, 2, 4);
+
+            //explosion animation
+            this.load.spritesheet('explosion', 'explosion.png', 96, 96, 12);
+
+            //background sprite from space-2d
+            var bg = document.getElementById('background').getAttribute('src');
+            this.load.image('bg', bg);
         }
 
         create() {

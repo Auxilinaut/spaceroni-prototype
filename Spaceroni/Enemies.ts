@@ -22,12 +22,12 @@
             for (var i = 0; i < num; i++) {
                 //  This creates new Phaser.Sprite instances within the group
                 //  Random location in world, random sprites from Infiniship
-                this.enemySprites[i] = this.create(Math.random() * 320, Math.random() * 320, 'sheet', i);
+                this.enemySprites[i] = this.create(Math.random() * 1000, Math.random() * 1000, 'sheet', i);
 
                 // physics per Sprite
                 this.enemySprites[i].body.collideWorldBounds = true;
                 this.enemySprites[i].body.drag.setTo(20);
-                this.enemySprites[i].body.maxVelocity.setTo(50);
+                this.enemySprites[i].body.maxVelocity.setTo(10);
                 this.enemySprites[i].body.bounce.setTo(200, 200);
                 this.enemySprites[i].anchor.setTo(0.5, 0.5);
                 this.enemySprites[i].smoothed = false;
@@ -43,7 +43,7 @@
             }
 
             // scale affects world x/y location
-            this.scale.set(6, 6);
+            this.scale.set(5,5);
 
         }
 

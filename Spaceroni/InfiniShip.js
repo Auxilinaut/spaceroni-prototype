@@ -547,7 +547,6 @@ InfiniShip.prototype.makeMultiple = function(numX, numY)
     
     // Creating a new image object to serve as wrapper
     var wrap = new Image();
-    var wrap2 = new Image();
     
     // Generating ships and inserting them inside the image
     for (var y = 0; y < (this.main.height - 12); y += 16) {
@@ -578,15 +577,10 @@ InfiniShip.prototype.makeMultiple = function(numX, numY)
 
     // Defining wrapper source
     wrap.src = this.main.toDataURL();
-    wrap2.src = this.offscreen.toDataURL();
     
     // Embedding into the document
     wrap.style.display = "none";
     wrap.setAttribute("id", "sheet");
     document.body.appendChild(wrap);
-
-    wrap2.style.display = "none";
-    wrap2.setAttribute("id", "sheet2");
-    document.body.appendChild(wrap2);
 
 };

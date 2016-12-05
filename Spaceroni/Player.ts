@@ -24,15 +24,14 @@ module Spaceroni {
             this.body.maxVelocity.set(300);
             this.body.collideWorldBounds = true;
 
-            this.scale.set(.8, .8);
+            this.scale.set(.6, .6);
             
             this.weapon = game.add.weapon(30, 'missile');
             
-            this.weapon.bulletKillType = Phaser.Weapon.KILL_LIFESPAN;
-            this.weapon.bulletLifespan = 3000;
-            this.weapon.bulletSpeed = 500;
+            this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+            this.weapon.bulletSpeed = 700;
             this.weapon.fireRate = 300;
-            this.weapon.trackSprite(this, 75, 0, true);
+            this.weapon.trackSprite(this, 55, 0, true);
         }
 
         update() {

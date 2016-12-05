@@ -5,7 +5,7 @@
 /tmp
 /Spaceroni/obj
 /Spaceroni/bin
-/Spaceroni/*.js
+/Spaceroni/app.js
 
 # dependencies
 /node_modules

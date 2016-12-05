@@ -6,27 +6,44 @@ module Spaceroni {
         music: Phaser.Sound;
         player: Spaceroni.Player;
         enemies: Spaceroni.Enemies;
+        enemyAmt: number = 10;
         
         angle: any;
         targetAngle: any;
-        enemyAmt = 5;
 
         indicators: Phaser.Group;
         indicatorSprites: Phaser.Sprite[] = [];
 
+        explosions: Phaser.Group;
+
+        nextEvent: number = 0;
+
         create() {
+
+            this.game.add.image(0, 0, 'bg');
             
-            this.game.add.tileSprite(0, 0, 1920, 1920, 'debug');
-            
-            this.player = new Player(this.game, 960, 960);
+            this.player = new Player(this.game, 2500, 2500);
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
             this.enemies = new Enemies(this.game, this.enemyAmt);
+
+            this.explosions = this.game.add.group();
+            this.explosions.enableBody = true;
+            this.explosions.physicsBodyType = Phaser.Physics.ARCADE;
+            this.explosions.createMultiple(30, 'explosion');
+            this.explosions.setAll('anchor.x', 0.5);
+            this.explosions.setAll('anchor.y', 0.5);
+            this.explosions.forEach(function (explosion: Phaser.Sprite) {
+                explosion.animations.add('explosion');
+            }, this);
+
+
             this.indicators = this.game.add.group();
+            this.indicators.scale.set(.2, .2);
             for (var i = 0; i < this.enemyAmt;i++){
                 this.indicatorSprites[i] = this.indicators.create(0, 0, 'arrow');
-                this.indicatorSprites[i].pivot.x = 345;
+                this.indicatorSprites[i].pivot.x = 1700;
                 this.indicatorSprites[i].pivot.y = 0;
                 this.indicatorSprites[i].anchor.set(0.5);
             }
@@ -44,11 +61,11 @@ module Spaceroni {
 
                 // Calculate the angle from the enemy to the player.x and player.y
                 this.targetAngle = this.game.math.angleBetween(
-                    enemy.x*6, enemy.y*6,
+                    enemy.x*5, enemy.y*5,
                     this.player.x, this.player.y
                 );
 
-                // Gradually aim the missile towards the target angle
+                // Gradually aim the enemy toward the target angle
                 if (enemy.rotation != this.targetAngle) {
                     // Calculate difference between the current angle and targetAngle
                     var delta = this.targetAngle - enemy.rotation;
@@ -71,35 +88,31 @@ module Spaceroni {
                     }
                 }
 
-                // they must hit one another so as not to clump
+                // they must bounce against one another so as not to clump
                 this.game.physics.arcade.collide(enemy, this.enemies);
 
-                //enemy.body.velocity.setTo(0, 0);
-                
-
-
+                // have the enemy move around and shoot, also remove indicator if enemy is on screen
                 if (enemy.inCamera) {
                     this.game.physics.arcade.accelerationFromRotation(enemy.rotation, 20, enemy.body.acceleration);
-                    this.enemies.weapons[this.enemies.getChildIndex(enemy)].fire();
+                    if (this.game.time.now > this.nextEvent) {
+                        this.enemies.weapons[this.enemies.getChildIndex(enemy)].fire();
+                    }
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].visible = false;
-                } else {
-                    //this.indicators.getChildAt(this.enemies.getChildIndex(enemy)).pivot.x = 200;
+                } else { // indicator on if enemy is out of camera (if it's alive)
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].visible = true;
-                    this.indicatorSprites[this.enemies.getChildIndex(enemy)].rotation = Phaser.Math.angleBetween(enemy.x * 6, enemy.y * 6, this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2);
-                    this.indicatorSprites[this.enemies.getChildIndex(enemy)].position.setTo(this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2);
-                    //this.game.physics.arcade.accelerationFromRotation(enemy.rotation, 1, enemy.body.acceleration);
+                    this.indicatorSprites[this.enemies.getChildIndex(enemy)].rotation = Phaser.Math.angleBetween(enemy.x * 5, enemy.y * 5, this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2);
+                    this.indicatorSprites[this.enemies.getChildIndex(enemy)].position.setTo(this.game.camera.x*5 + this.game.camera.width*2.5, this.game.camera.y*5 + this.game.camera.height*2.5);
                 }
 
             }, this);
             
-            
+            this.updateNextEvent();
 
         }
 
         render() {
+            this.game.debug.text("now: " + this.game.time.now + " next: " + this.nextEvent, 32, 32);
             /*this.game.debug.cameraInfo(this.game.camera, 32, 10);
-            this.game.debug.text(this.angle, 32, 32);
-            this.game.debug.text(this.targetAngle, 32, 50);
             
             this.enemies.forEachAlive(function (enemy: Phaser.Sprite) {
                 this.game.debug.spriteInfo(enemy, 32, (this.enemies.getChildIndex(enemy)+1)*85);
@@ -111,20 +124,26 @@ module Spaceroni {
         }
 
         hitEnemy(bul, enm) {
-
-            /*
-            var explosion = explosions.getFirstExists(false);
-            explosion.reset(Bullet.body.x + Bullet.body.halfWidth, Bullet.body.y + Bullet.body.halfHeight);
-            explosion.body.velocity.y = enemy.body.velocity.y;
+            var explosion = this.explosions.getFirstExists(false);
+            explosion.reset(bul.body.x + bul.body.halfWidth, bul.body.y + bul.body.halfHeight);
+            explosion.body.velocity.y = enm.body.velocity.y;
             explosion.alpha = 0.7;
             explosion.play('explosion', 30, false, true);
-            */
+            
+
+            var idx = this.enemies.getChildIndex(enm);
+
+            this.indicators.getChildAt(idx).visible = false;
 
             bul.kill();
 
             enm.kill();
 
             console.log("boom");
+        }
+
+        updateNextEvent() {
+            this.nextEvent = this.game.time.now + (this.game.rnd.between(0,1) * 100);
         }
 
     }

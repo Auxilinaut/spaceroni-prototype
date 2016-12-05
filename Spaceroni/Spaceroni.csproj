@@ -24,8 +24,10 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="arrow.png" />
+    <Content Include="background.js" />
     <Content Include="dawg.jpg" />
     <Content Include="debug-grid-1920x1920.png" />
+    <Content Include="explosion.png" />
     <Content Include="index.html" />
     <Content Include="InfiniShip.js" />
     <Content Include="laser.png" />
