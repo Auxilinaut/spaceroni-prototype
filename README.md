@@ -1,9 +1,9 @@
-### Spaceroni Game ###
+### Game ###
 
-This game uses [Phaser](http://phaser.io/) and [Infiniship](https://github.com/yuigoto/infiniship). It is VERY early in development.
+Spaceroni is a space shooter game that uses [Phaser](http://phaser.io/), [Infiniship](https://github.com/yuigoto/infiniship), and [Space-2D](https://github.com/wwwtyro/space-2d). This game is VERY early in development.
 
 Run Spaceroni.sln in VS2015 or higher to start the project.
 
-### Spaceroni Web Client ###
+### Web Client ###
 
-The web client must needs be re-generated. Sorry about that.
+The web client must needs be re-generated. Angular 2 has seen many changes, and more to come. Focus is now set on core game logic rather than a website and extensive UI.
