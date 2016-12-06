@@ -5,10 +5,11 @@ module Spaceroni {
         background: Phaser.Sprite;
         music: Phaser.Sound;
         player: Spaceroni.Player;
+
         enemies: Spaceroni.Enemies;
-        enemyAmt: number = 10;
-        enemyTrackAmt: number;
-        
+        enemyInitAmt: number = 4;
+        enemyAmt: number = this.enemyInitAmt;
+
         angle: any;
         targetAngle: any;
 
@@ -20,7 +21,10 @@ module Spaceroni {
         nextEvent: number = 0;
 
         score: number = 0;
-        highScore: number = 0;
+        highScore: number;
+        livesInitAmt: number = 3;
+        lives: number = this.livesInitAmt;
+
 
         create() {
 
@@ -31,6 +35,8 @@ module Spaceroni {
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 
             this.enemies = new Enemies(this.game, this.enemyAmt);
+
+            this.highScore = Number(localStorage.getItem('highscore'));
 
             this.explosions = this.game.add.group();
             this.explosions.enableBody = true;
@@ -121,54 +127,11 @@ module Spaceroni {
         }
 
         render() {
-            this.game.debug.text("Lives: " + this.player.lives, 32, 32);
+            this.game.debug.text("Lives: " + this.lives, 32, 32);
             this.game.debug.text("Score: " + this.score, 120, 32);
             if (this.highScore != null) {
-                this.game.debug.text("High Score: " + this.highScore, 1000, 32);
+                this.game.debug.text("High Score: " + this.highScore, 1115, 32);
             }
-        }
-
-        // collision bullet to player
-        hitPlayer(bul, plr) {
-            var explosion = this.explosions.getFirstExists(false);
-            explosion.reset(bul.body.x + bul.body.halfWidth, bul.body.y + bul.body.halfHeight);
-            explosion.body.velocity.y = plr.body.velocity.y;
-            explosion.alpha = 0.7;
-            explosion.play('explosion', 30, false, true);
-
-
-            
-
-            bul.kill();
-            
-            if (this.player.inCamera) {
-                if (this.player.lives > 1) {
-                    this.player.lives -= 1;
-                    this.player.kill();
-                    this.player.reset(2500, 2500);
-                } else {
-                    this.player.lives -= 1;
-                    this.player.kill();
-                    console.log("gg");
-                }
-
-                if (!this.player.alive) this.gameOver();
-
-                console.log(this.player.lives + " more lives");
-            }
-        }
-
-        // player dead :[
-        gameOver() {
-            this.highScore = Number(localStorage.getItem('highscore'));
-            if (this.highScore == null) {
-                if (this.score > this.highScore) {
-                    localStorage.setItem('highscore', this.score.toString());
-                }
-            } else {
-                localStorage.setItem('highscore', this.highScore.toString());
-            }
-            this.game.state.start('Boot', true);
         }
 
         // collision bullet to enemy
@@ -190,7 +153,60 @@ module Spaceroni {
 
             this.score += 1;
 
+            if (this.enemies.getFirstAlive() == null) {
+                this.enemyAmt += this.enemyInitAmt;
+                this.lives += 1;
+                this.game.state.start('Level1');
+            }
+
             console.log("boom");
+        }
+
+        // collision bullet to player
+        hitPlayer(bul, plr) {
+            var explosion = this.explosions.getFirstExists(false);
+            explosion.reset(bul.body.x + bul.body.halfWidth, bul.body.y + bul.body.halfHeight);
+            explosion.body.velocity.y = plr.body.velocity.y;
+            explosion.alpha = 0.7;
+            explosion.play('explosion', 30, false, true);
+
+
+            
+
+            bul.kill();
+            
+            if (this.player.inCamera) {
+                if (this.lives > 1) {
+                    this.lives -= 1;
+                    this.player.kill();
+                    this.player.reset(2500, 2500);
+                } else {
+                    this.lives -= 1;
+                    this.player.kill();
+                    console.log("gg");
+                }
+
+                if (!this.player.alive) this.gameOver();
+
+                console.log(this.lives + " more lives");
+            }
+        }
+
+        // player dead :[
+        gameOver() {
+            if (this.highScore !== null) {
+                if (this.score > this.highScore) {
+                    localStorage.setItem('highscore', this.score.toString());
+                }
+            } else {
+                localStorage.setItem('highscore', this.score.toString());
+            }
+
+            this.score = 0;
+            this.lives = 3;
+            this.enemyAmt = this.enemyInitAmt;
+
+            this.game.state.start('MainMenu');
         }
 
         // random enemy fire interval setter

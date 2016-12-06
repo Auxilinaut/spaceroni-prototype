@@ -7,15 +7,15 @@
         preload() {
 
             //preloader sprite
-            this.preloadBar = this.add.sprite(200, 250, 'preloadBar');
+            this.preloadBar = this.add.sprite(this.game.camera.width / 2 - 200, this.game.camera.height / 2, 'preloadBar');
             this.load.setPreloadSprite(this.preloadBar);
 
             //game assets
             this.load.image('player', 'ship.png');
-            this.load.image('debug', 'debug-grid-1920x1920.png');
             this.load.image('missile', 'missile.png');
             this.load.image('laser', 'laser.png');
             this.load.image('arrow', 'arrow.png');
+            this.load.image('logo', 'mainmenu.png');
 
             //enemy spritesheet from Infiniship
             var sheet = document.getElementById('sheet').getAttribute('src');
@@ -27,6 +27,7 @@
             //background sprite from space-2d
             var bg = document.getElementById('background').getAttribute('src');
             this.load.image('bg', bg);
+
         }
 
         create() {

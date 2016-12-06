@@ -5,7 +5,6 @@ module Spaceroni {
         cursors: Phaser.CursorKeys;
         weapon: Phaser.Weapon; //add Spaceroni.Missile
         fireButton: any;
-        lives: number = 3;
 
         constructor(game: Phaser.Game, x: number, y: number) {
 

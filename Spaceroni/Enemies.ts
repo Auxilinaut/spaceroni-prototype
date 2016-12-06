@@ -27,7 +27,7 @@
                 // physics per Sprite
                 this.enemySprites[i].body.collideWorldBounds = true;
                 this.enemySprites[i].body.drag.setTo(20);
-                this.enemySprites[i].body.maxVelocity.setTo(10);
+                this.enemySprites[i].body.maxVelocity.setTo(30);
                 this.enemySprites[i].body.bounce.setTo(200, 200);
                 this.enemySprites[i].anchor.setTo(0.5, 0.5);
                 this.enemySprites[i].smoothed = false;
