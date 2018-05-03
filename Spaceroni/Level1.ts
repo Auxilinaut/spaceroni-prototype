@@ -2,7 +2,7 @@ module Spaceroni {
 
     export class Level1 extends Phaser.State {
 
-        background: Phaser.Sprite;
+        background: Phaser.Image;
         music: Phaser.Sound;
         player: Spaceroni.Player;
 
@@ -28,8 +28,10 @@ module Spaceroni {
 
         create() {
 
-            this.game.add.image(0, 0, 'bg');
-            
+            this.background = this.game.add.image(0, 0, 'bg');
+            this.background.scale.setTo(5.0, 5.0);
+            this.background.smoothed = false;
+
             this.player = new Player(this.game, 2500, 2500);
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);

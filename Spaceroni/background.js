@@ -39,8 +39,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var canvas = document.createElement('canvas');
 canvas.id = 'render-canvas';
-canvas.width = 5000;
-canvas.height = 5000;
+canvas.width = 1000;
+canvas.height = 1000;
 
 var scene = new _scene2.default(canvas);
 var wrap = new Image();

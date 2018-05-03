@@ -37,6 +37,7 @@
     <Content Include="phaser.min.js" />
     <Content Include="ship.png" />
     <Content Include="web.config" />
+    <Content Include="webaudiox.js" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />

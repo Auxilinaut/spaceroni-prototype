@@ -10,7 +10,8 @@ module Spaceroni {
 
             this.highScore = localStorage.getItem('highscore');
             this.background = this.game.add.image(0, 0, 'bg');
-            
+            this.background.scale.setTo(5.0, 5.0);
+            this.background.smoothed = false;
             this.background.alpha = 0;
 
             this.logo = this.add.sprite(this.game.camera.width / 2, this.game.camera.height / 2-300, 'logo');
