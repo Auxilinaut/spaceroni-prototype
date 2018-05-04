@@ -1,14 +1,20 @@
 module Spaceroni {
 
+    declare var aud: any;
+    declare var audio_context: any;
+
     export class Level1 extends Phaser.State {
 
         background: Phaser.Image;
         music: Phaser.Sound;
         player: Spaceroni.Player;
 
+        logBtn: Phaser.Key;
+
         enemies: Spaceroni.Enemies;
-        enemyInitAmt: number = 4;
+        enemyInitAmt: number = 3;
         enemyAmt: number = this.enemyInitAmt;
+        enemyOnScreen: boolean = false;
 
         angle: any;
         targetAngle: any;
@@ -19,12 +25,18 @@ module Spaceroni {
         explosions: Phaser.Group;
 
         nextEvent: number = 0;
+        nextMusicEvent: number = 0;
 
         score: number = 0;
         highScore: number;
         livesInitAmt: number = 3;
         lives: number = this.livesInitAmt;
 
+        //music gen vars
+        stress: number;
+        energy: number;
+
+        showGenLog: boolean = false;
 
         create() {
 
@@ -62,6 +74,15 @@ module Spaceroni {
 
             this.game.physics.arcade.enable(this.indicators);
 
+            this.stress = 0;
+            this.energy = 0;
+            aud.adaptPattern(this.stress, this.energy);
+
+            this.logBtn = this.game.input.keyboard.addKey(Phaser.KeyCode.G);
+            this.logBtn.onDown.add(this.toggleGenLog, this);
+
+            this.input.onDown.add(this.toggleMusic, this);
+
         }
 
         update() {
@@ -72,6 +93,7 @@ module Spaceroni {
                 this.game.physics.arcade.overlap(this.enemies.weapons[this.enemies.getChildIndex(enm)].bullets, this.player, this.hitPlayer, null, this);
             }, this);
 
+            this.enemyOnScreen = false;
 
             this.enemies.forEachAlive(function (enemy: Phaser.Sprite) {
 
@@ -99,10 +121,8 @@ module Spaceroni {
                     }
 
                     // Just set angle to target angle if they are close
-                    if (Math.abs(delta) < this.game.math.degToRad(3) && enemy.inCamera) {
+                    if (enemy.inCamera && Math.abs(delta) < this.game.math.degToRad(3)) {
                         enemy.rotation = this.targetAngle;
-                    } else {
-
                     }
                 }
 
@@ -111,18 +131,32 @@ module Spaceroni {
 
                 // have the enemy move around and shoot, also remove indicator if enemy is on screen
                 if (enemy.inCamera) {
-                    this.game.physics.arcade.accelerationFromRotation(enemy.rotation, 20, enemy.body.acceleration);
+                    this.enemyOnScreen = true;
                     if (this.game.time.now > this.nextEvent) {
                         this.enemies.weapons[this.enemies.getChildIndex(enemy)].fire();
                     }
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].visible = false;
-                } else { // indicator on if enemy is out of camera (if it's alive)
+                } else { // indicator on if enemy is out of camera (and it's alive)
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].visible = true;
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].rotation = Phaser.Math.angleBetween(enemy.x * 5, enemy.y * 5, this.game.camera.x + this.game.camera.width / 2, this.game.camera.y + this.game.camera.height / 2);
                     this.indicatorSprites[this.enemies.getChildIndex(enemy)].position.setTo(this.game.camera.x*5 + this.game.camera.width*2.5, this.game.camera.y*5 + this.game.camera.height*2.5);
                 }
 
+                //move enemy
+                this.game.physics.arcade.accelerationFromRotation(enemy.rotation, 20, enemy.body.acceleration);
+
             }, this);
+
+            // periodically adapt music to higher stress when enemies are on screen
+            if (this.game.time.now > this.nextMusicEvent) {
+                if (this.enemyOnScreen) {
+                    this.stress = 1;
+                } else {
+                    this.stress = 0;
+                }
+                this.nextMusicEvent = this.game.time.now + 200;
+                aud.adaptPattern(this.stress, this.energy);
+            }
             
             this.updateNextEvent();
 
@@ -133,6 +167,10 @@ module Spaceroni {
             this.game.debug.text("Score: " + this.score, 120, 32);
             if (this.highScore != null) {
                 this.game.debug.text("High Score: " + this.highScore, 1115, 32);
+            }
+            if (this.showGenLog) {
+                this.game.debug.text("[Music] Stress:" + this.stress, 32, 670);
+                this.game.debug.text("[Music] Energy:" + this.energy, 32, 700);
             }
         }
 
@@ -155,13 +193,22 @@ module Spaceroni {
 
             this.score += 1;
 
+            var ratio = this.enemies.countLiving() / this.enemyAmt; //ratio living enemies to total enemies in level
+            this.energy = 1 - ratio + (ratio * 0.2) ; //set energy
+
+            if (this.energy > 1) this.energy = 1;
+
             if (this.enemies.getFirstAlive() == null) {
                 this.enemyAmt += this.enemyInitAmt;
                 this.lives += 1;
+
+                this.stress = 0;
+                this.energy = 0;
+
                 this.game.state.start('Level1');
             }
 
-            console.log("boom");
+            //console.log("boom");
         }
 
         // collision bullet to player
@@ -190,7 +237,7 @@ module Spaceroni {
 
                 if (!this.player.alive) this.gameOver();
 
-                console.log(this.lives + " more lives");
+                //console.log(this.lives + " more lives");
             }
         }
 
@@ -214,6 +261,17 @@ module Spaceroni {
         // random enemy fire interval setter
         updateNextEvent() {
             this.nextEvent = this.game.time.now + (this.game.rnd.between(0,1) * 100);
+        }
+
+        // generation log
+        toggleGenLog() {
+            this.showGenLog = !this.showGenLog;
+            // todo: check if log is on, append to file, etc.
+        }
+
+        toggleMusic() {
+            audio_context.resume();
+            aud.togglePlay();
         }
 
     }

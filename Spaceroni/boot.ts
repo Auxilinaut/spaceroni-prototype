@@ -1,5 +1,7 @@
 ﻿module Spaceroni {
 
+    declare var aud: any;
+
     export class Boot extends Phaser.State {
 
         preload() {
@@ -21,7 +23,10 @@
             this.input.maxPointers = 1;
 
             //  Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
-            //this.stage.disableVisibilityChange = true;
+            this.stage.disableVisibilityChange = true;
+
+            this.game.onPause.add(this.resumeOrPause, this);
+            this.game.onResume.add(this.resumeOrPause, this);
 
             if (this.game.device.desktop) {
                 //  If you have any desktop specific settings, they can go in here
@@ -42,6 +47,10 @@
             var scale = Math.min((window.innerWidth-15) / this.game.width, (window.innerHeight-10) / this.game.height);
 
             manager.setUserScale(scale, scale, 0, 0);
+        }
+
+        resumeOrPause() {
+            aud.togglePlay();
         }
 
     }
